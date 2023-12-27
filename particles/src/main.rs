@@ -22,7 +22,7 @@ fn main() {
     // Create the bevy 'app' and add all of the plugins/systems.
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_plugins(FrameTimeDiagnosticsPlugin{})
+        .add_plugins(FrameTimeDiagnosticsPlugin {})
         .add_plugins(RapierPhysicsPlugin::<NoUserData>::default())
         .add_systems(Startup, setup)
         .add_systems(Update, (spawn_particles, despawn_particles))
