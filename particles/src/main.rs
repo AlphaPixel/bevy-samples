@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use bevy::{core_pipeline::fxaa::Fxaa, pbr::DirectionalLightShadowMap, pbr::NotShadowCaster};
+use bevy::{core_pipeline::fxaa::Fxaa, pbr::DirectionalLightShadowMap};
 
 use bevy_rapier3d::prelude::*;
 use rand::*;
@@ -137,7 +137,6 @@ fn setup(
                 transform: Transform::from_translation(Vec3::Y / 2.0),
                 ..Default::default()
             })
-            .insert(NotShadowCaster)
             .insert(RigidBody::Fixed)
             .insert(Collider::convex_hull(ground_boundary).unwrap());
     }
