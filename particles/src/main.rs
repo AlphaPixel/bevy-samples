@@ -212,11 +212,11 @@ fn spawn_particles(
 // their expire-time.
 fn despawn_particles(
     mut commands: Commands,
-    mut query: Query<(Entity, &ExpireTime, &ParticleMarker)>,
+    mut query: Query<(Entity, &ExpireTime), With<ParticleMarker>>,
 ) {
     // Determine if it's time to despawn particles...if so, do it.
     let now = Instant::now();
-    for (entity, expire_time, _) in query.iter_mut() {
+    for (entity, expire_time) in query.iter_mut() {
         if now >= expire_time.0 {
             commands.entity(entity).despawn()
         }
