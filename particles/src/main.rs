@@ -1,4 +1,6 @@
 use bevy::prelude::*;
+use bevy::{core_pipeline::fxaa::Fxaa, pbr::DirectionalLightShadowMap, pbr::NotShadowCaster};
+
 use bevy_rapier3d::prelude::*;
 use rand::*;
 use std::time::{Duration, Instant};
@@ -21,6 +23,12 @@ const GROUND_RADIUS: f32 = 10.0; // The "radius" of the ground plane.
 fn main() {
     // Create the bevy 'app' and add all of the plugins/systems.
     App::new()
+        .insert_resource(Msaa::Off)
+        .insert_resource(AmbientLight {
+            color: Color::WHITE,
+            brightness: 1.0 / 5.0f32,
+        })
+        .insert_resource(DirectionalLightShadowMap { size: 4096 })
         .add_plugins(DefaultPlugins)
         .add_plugins(FrameTimeDiagnosticsPlugin {})
         .add_plugins(RapierPhysicsPlugin::<NoUserData>::default())
@@ -129,27 +137,32 @@ fn setup(
                 transform: Transform::from_translation(Vec3::Y / 2.0),
                 ..Default::default()
             })
+            .insert(NotShadowCaster)
             .insert(RigidBody::Fixed)
             .insert(Collider::convex_hull(ground_boundary).unwrap());
     }
 
-    // Spawn a simple point light
+    // // Spawn a simple point light
     commands.spawn(PointLightBundle {
         transform: Transform::from_xyz(50.0, 50.0, 0.0),
         point_light: PointLight {
             intensity: 600000.,
             range: 500.,
+            shadows_enabled: true,
             ..default()
         },
         ..default()
     });
 
     // Spawn a simple perspective camera
-    commands.spawn(Camera3dBundle {
-        transform: Transform::from_xyz(20.0, 20.0, 20.0).looking_at(Vec3::default(), Vec3::Y),
-        projection: PerspectiveProjection { ..default() }.into(),
-        ..default()
-    });
+    commands.spawn((
+        Camera3dBundle {
+            transform: Transform::from_xyz(20.0, 20.0, 20.0).looking_at(Vec3::default(), Vec3::Y),
+            projection: PerspectiveProjection { ..default() }.into(),
+            ..default()
+        },
+        Fxaa::default(),
+    ));
 }
 
 // spawn_particle - an 'update' system that spawns new particles if it's time to do so.
