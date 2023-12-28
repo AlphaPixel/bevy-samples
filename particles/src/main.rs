@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use bevy::{core_pipeline::fxaa::Fxaa, pbr::DirectionalLightShadowMap};
+use bevy::{core_pipeline::fxaa::Fxaa, pbr::PointLightShadowMap};
 
 use bevy_rapier3d::prelude::*;
 use rand::*;
@@ -28,7 +28,7 @@ fn main() {
             color: Color::WHITE,
             brightness: 1.0 / 5.0f32,
         })
-        .insert_resource(DirectionalLightShadowMap { size: 4096 })
+        .insert_resource(PointLightShadowMap { size: 4096 })
         .add_plugins(DefaultPlugins)
         .add_plugins(FrameTimeDiagnosticsPlugin {})
         .add_plugins(RapierPhysicsPlugin::<NoUserData>::default())
